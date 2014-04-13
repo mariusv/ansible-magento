@@ -1,0 +1,8 @@
+---
+- name: Install memcached 
+  apt: name={{ item }} state=present
+  with_items:
+    - memcached
+
+- name: Start memcached
+  service: name=memcached state=started enabled=yes

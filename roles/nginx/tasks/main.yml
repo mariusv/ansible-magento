@@ -1,0 +1,15 @@
+
+- name: Install Nginx
+  apt: name=nginx state=present update_cache=yes
+
+- name: Remove the default Nginx template
+  command: rm -f /etc/nginx/sites-enabled/default
+
+- name: Copy vhost configuration
+  template: src=default dest=/etc/nginx/sites-available/{{ server_hostname }}
+
+- name: Enable the new vhost
+  file: src=/etc/nginx/sites-available/{{ server_hostname }} dest=/etc/nginx/sites-enabled/{{ server_hostname }} state=link
+
+- name: Start nginx
+  service: name=nginx state=restarted

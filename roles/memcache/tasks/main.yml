@@ -1,0 +1,4 @@
+- include: memcache_deb.yml
+  when: ansible_os_family == "Debian"
+- include: memcache_rpm.yml
+  when: ansible_os_family == "RedHat"

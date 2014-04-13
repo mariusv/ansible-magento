@@ -1,0 +1,20 @@
+---
+- name: Install php and deps 
+  apt: name={{ item }} state=present
+  with_items:
+    - php5-fpm
+    - php5-cli
+    - php5-gd
+    - php5-mysql
+    - php5-curl
+    - php5-mcrypt
+    - vim
+
+- name: Configure PHP-FPM
+  command: rm -f /etc/php5/fpm/pool.d/www.conf
+
+- name: Add the magento template
+  template: src=magento.conf dest=/etc/php5/fpm/pool.d/magento.conf
+
+- name: Restart FPM
+  service: name=php5-fpm state=restarted       

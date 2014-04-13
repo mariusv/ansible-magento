@@ -1,0 +1,13 @@
+---
+
+- name: Install Varnish
+  apt: name=varnish state=present
+  
+- name: Copy varnish configuration
+  template: src=varnish dest=/etc/default/varnish
+
+- name: Copy varnish vcl configuration
+  template: src=default.vcl dest=/etc/varnish/default.vcl
+
+- name: Start varnish
+  service: name=varnish state=started enabled=yes

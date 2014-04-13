@@ -1,0 +1,55 @@
+map $http_host $magesite {
+
+
+}
+
+server {
+  listen 8080
+  ;
+  access_log  /var/log/nginx/access.log;
+
+  server_name  {{ server_hostname }};
+  root /var/www/{{ server_hostname }};
+  autoindex off;
+
+  # protection (we have no .htaccess)
+  #location ~ (^/(app/|includes/|lib/|/pkginfo/|var/|report/config.xml)|/\.git/|/\.hg/|/\.svn/|\.installed|\.ssh|/.hta.+) {
+  #  deny all;
+  #}
+
+  # handle all .php files, /downloader and /report
+  location ~ (\.php|/downloader/?|/report/?)$ {
+    if ($request_uri ~ /(downloader|report)$){ # no trailing /, redirecting
+      rewrite  ^(.*)$ $1/ permanent;
+    }
+    fastcgi_index index.php;
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param MAGE_RUN_TYPE store;
+    fastcgi_param MAGE_RUN_CODE $magesite;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    
+    if (-e $request_filename) { # check if requested path exists
+      fastcgi_pass 127.0.0.1:9001;
+    }
+  }
+
+  # handle magento
+  location / {
+    # set expire headers
+    if ($request_uri ~* "\.(ico|css|js|gif|jpe?g|png)$") {
+      expires max;
+    }
+    # set fastcgi settings, not allowed in the "if" block
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param MAGE_RUN_TYPE store;
+    fastcgi_param MAGE_RUN_CODE $magesite;
+    fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+    fastcgi_param SCRIPT_NAME /index.php;
+    
+    # rewrite - if file not found, pass it to the backend
+    if (!-f $request_filename) {
+      fastcgi_pass 127.0.0.1:9001;
+      break;
+    }
+  }
+}
