@@ -41,3 +41,5 @@ magento_domain: <== the magento installation domain
 
 * Better documentation
 * Multiple web nodes
+* Make it work on CentOS/RedHat
+* Build the servers too
