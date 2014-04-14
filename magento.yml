@@ -1,4 +1,4 @@
-# Run with: ansible-playbook -i hosts.yml rax-multi-magento.yml
+# Run with: ansible-playbook -i hosts.yml magento.yml
 ---
 - name: Install Magento 
   hosts: all
