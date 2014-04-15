@@ -28,3 +28,6 @@ magento_domain: http://{{ server_hostname }}/
 #System handlers
 group: magento
 user: magento
+
+#PHP-FPM sockets or TCP
+php_listen: /var/run/php5-fpm.sock
