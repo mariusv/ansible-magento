@@ -34,6 +34,7 @@ magento_admin_email: <== email address used for the admin user <br />
 magento_admin_user:  <== user <br />
 magento_admin_pass:  <== password <br />
 magento_domain: <== the magento installation domain
+php_listen: <== PHP-FPM should use sockets or TCP (defaults on sock)
 
 
 ---
